@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="converter-card">
+        <h2>Currency Converter</h2>
+        
+        <div class="input-group">
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" value="1" min="1">
+        </div>
+
+        <div class="selection-group">
+            <div class="select-box">
+                <label for="from-currency">From</label>
+                <select id="from-currency"></select>
+            </div>
+
+            <button id="swap-btn" title="Swap Currencies">⇆</button>
+
+            <div class="select-box">
+                <label for="to-currency">To</label>
+                <select id="to-currency"></select>
+            </div>
+        </div>
+
+        <button id="convert-btn">Convert</button>
+
+        <div class="result-box">
+            <p id="result-text">Fetching latest rates...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
