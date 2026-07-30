@@ -30,6 +30,58 @@ h2 {
     font-size: 1.5rem;
 }
 
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.app-header h2 {
+    margin-bottom: 0;
+}
+
+#logout-btn {
+    background: #f0f2f5;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #667eea;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+#logout-btn:hover {
+    background: #e2e5e9;
+}
+
+.link-row {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 0.85rem;
+}
+
+.link-row a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.link-row a:hover {
+    text-decoration: underline;
+}
+
+#login-error {
+    border-left-color: #e53e3e;
+}
+
+#login-error-text {
+    color: #e53e3e;
+    font-size: 0.95rem;
+}
+
 label {
     display: block;
     font-size: 0.85rem;
