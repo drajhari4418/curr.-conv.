@@ -1,10 +1,4 @@
-// ====== Supabase config ======
-// Replace these two values with the ones from your Supabase project:
-// Project Settings -> API -> Project URL / anon public key
-const SUPABASE_URL = "https://lnxdjhajshpqsricttys.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxueGRqaGFqc2hwcXNyaWN0dHlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MjQ0NjYsImV4cCI6MjEwMTAwMDQ2Nn0.WGlL_t6eCBaoB_0iNHNjCeYaXfcXT94lJPp8oglgHKU";
-
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Supabase client comes from supabase-client.js, loaded before this file.
 
 // DOM elements - login
 const loginScreen = document.getElementById("login-screen");
@@ -16,6 +10,18 @@ const logoutBtn = document.getElementById("logout-btn");
 const loginError = document.getElementById("login-error");
 const loginErrorText = document.getElementById("login-error-text");
 const forgotPasswordLink = document.getElementById("forgot-password-link");
+const goToSignupLink = document.getElementById("go-to-signup-link");
+
+// DOM elements - sign up
+const signupScreen = document.getElementById("signup-screen");
+const signupName = document.getElementById("signup-name");
+const signupEmail = document.getElementById("signup-email");
+const signupPassword = document.getElementById("signup-password");
+const signupConfirmPassword = document.getElementById("signup-confirm-password");
+const signupBtn = document.getElementById("signup-btn");
+const backToLoginFromSignupLink = document.getElementById("back-to-login-from-signup-link");
+const signupMsg = document.getElementById("signup-msg");
+const signupMsgText = document.getElementById("signup-msg-text");
 
 // DOM elements - forgot password (request)
 const forgotPasswordScreen = document.getElementById("forgot-password-screen");
@@ -34,14 +40,14 @@ const newPasswordMsg = document.getElementById("new-password-msg");
 const newPasswordMsgText = document.getElementById("new-password-msg-text");
 
 // All gate screens, for easy show/hide
-const allScreens = [loginScreen, forgotPasswordScreen, newPasswordScreen, appContent];
+const allScreens = [loginScreen, signupScreen, forgotPasswordScreen, newPasswordScreen, appContent];
 
 function showScreen(screen) {
     allScreens.forEach((s) => (s.style.display = "none"));
     screen.style.display = "block";
 }
 
-function showApp() {
+function showApp(user) {
     showScreen(appContent);
 }
 
@@ -67,7 +73,7 @@ function showMessage(el, textEl, message, isError) {
 async function checkSession() {
     const { data } = await supabaseClient.auth.getSession();
     if (data.session) {
-        showApp();
+        showApp(data.session.user);
     } else {
         showLogin();
     }
@@ -87,7 +93,7 @@ async function handleLogin() {
     loginBtn.disabled = true;
     loginBtn.innerText = "Signing in...";
 
-    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
     loginBtn.disabled = false;
     loginBtn.innerText = "Log In";
@@ -98,7 +104,71 @@ async function handleLogin() {
     }
 
     loginPassword.value = "";
-    showApp();
+    showApp(data.user);
+}
+
+// Handle sign up: creates the auth user and stores their full name in
+// user_metadata so it can be shown as "Hello, {name}" after login.
+async function handleSignup() {
+    signupMsg.style.display = "none";
+
+    const fullName = signupName.value.trim();
+    const email = signupEmail.value.trim();
+    const password = signupPassword.value;
+    const confirmPassword = signupConfirmPassword.value;
+
+    if (!fullName || !email || !password) {
+        showMessage(signupMsg, signupMsgText, "Please fill in all fields.", true);
+        return;
+    }
+
+    if (password.length < 6) {
+        showMessage(signupMsg, signupMsgText, "Password must be at least 6 characters.", true);
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        showMessage(signupMsg, signupMsgText, "Passwords don't match.", true);
+        return;
+    }
+
+    signupBtn.disabled = true;
+    signupBtn.innerText = "Creating account...";
+
+    const { data, error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: {
+            data: { full_name: fullName }
+        }
+    });
+
+    signupBtn.disabled = false;
+    signupBtn.innerText = "Sign Up";
+
+    if (error) {
+        showMessage(signupMsg, signupMsgText, error.message || "Couldn't create account. Try again.", true);
+        return;
+    }
+
+    // If email confirmation is OFF in your Supabase auth settings, signUp
+    // returns an active session immediately - log the user straight in.
+    if (data.session) {
+        signupName.value = "";
+        signupEmail.value = "";
+        signupPassword.value = "";
+        signupConfirmPassword.value = "";
+        showApp(data.user);
+        return;
+    }
+
+    // Otherwise (confirmation emails ON), tell them to check their inbox.
+    showMessage(
+        signupMsg,
+        signupMsgText,
+        "Account created! Check your email to confirm before logging in.",
+        false
+    );
 }
 
 // Handle logout
@@ -177,9 +247,21 @@ async function handleSaveNewPassword() {
 }
 
 loginBtn.addEventListener("click", handleLogin);
+signupBtn.addEventListener("click", handleSignup);
 logoutBtn.addEventListener("click", handleLogout);
 sendResetBtn.addEventListener("click", handleSendReset);
 saveNewPasswordBtn.addEventListener("click", handleSaveNewPassword);
+
+goToSignupLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    signupMsg.style.display = "none";
+    showScreen(signupScreen);
+});
+
+backToLoginFromSignupLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    showLogin();
+});
 
 forgotPasswordLink.addEventListener("click", (e) => {
     e.preventDefault();
@@ -213,7 +295,7 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
         return;
     }
     if (session) {
-        showApp();
+        showApp(session.user);
     } else {
         showLogin();
     }

@@ -19,8 +19,30 @@ body {
     padding: 30px;
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    width: 100%;
-    max-width: 450px;
+    width: 60%;
+    min-width: 320px;   /* don't let it get too cramped on small screens */
+    max-width: 900px;   /* don't let it stretch too wide on huge monitors */
+}
+
+/* Post-signin converter: wider than the sign-in card */
+#app-content {
+    width: 80%;
+    max-width: 1100px;
+}
+
+/* Wider variant used by the dashboard page */
+.converter-card.wide {
+    width: 60%;
+    max-width: 1100px;
+}
+
+/* Below ~600px, percentage widths are too narrow for comfortable input - go full width instead */
+@media (max-width: 600px) {
+    .converter-card,
+    .converter-card.wide,
+    #app-content {
+        width: 100%;
+    }
 }
 
 h2 {
@@ -39,9 +61,23 @@ h2 {
 
 .app-header h2 {
     margin-bottom: 0;
+    text-align: left;
 }
 
-#logout-btn {
+.user-greeting {
+    margin-top: 2px;
+    font-size: 0.85rem;
+    color: #667eea;
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#logout-btn, .ghost-btn {
     background: #f0f2f5;
     border: none;
     padding: 8px 14px;
@@ -51,9 +87,11 @@ h2 {
     font-size: 0.85rem;
     font-weight: 600;
     transition: background 0.2s;
+    text-decoration: none;
+    display: inline-block;
 }
 
-#logout-btn:hover {
+#logout-btn:hover, .ghost-btn:hover {
     background: #e2e5e9;
 }
 
@@ -94,7 +132,7 @@ label {
     margin-bottom: 20px;
 }
 
-input[type="number"], select {
+input[type="number"], input[type="email"], input[type="password"], select {
     width: 100%;
     padding: 12px;
     border: 1px solid #ddd;
@@ -165,4 +203,89 @@ input[type="number"]:focus, select:focus {
     font-size: 1.2rem;
     color: #2d3748;
     font-weight: 600;
+}
+
+/* ===================== Dashboard-specific styles ===================== */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.stat-card {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+}
+
+.stat-card .stat-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 4px;
+}
+
+.stat-card .stat-label {
+    font-size: 0.8rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.section-title {
+    font-size: 1.05rem;
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.history-table-wrap {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+table.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+table.history-table th, table.history-table td {
+    padding: 10px 14px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+table.history-table thead th {
+    background: #f8f9fa;
+    color: #555;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+table.history-table tbody tr {
+    border-top: 1px solid #eee;
+}
+
+table.history-table tbody tr:hover {
+    background: #fafbff;
+}
+
+.empty-state {
+    text-align: center;
+    color: #888;
+    padding: 30px 10px;
+    font-size: 0.95rem;
+}
+
+.dashboard-loading {
+    text-align: center;
+    color: #888;
+    padding: 20px;
 }
