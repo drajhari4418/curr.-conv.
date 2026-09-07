@@ -26,6 +26,7 @@ const toSelect = document.getElementById("to-currency");
 const convertBtn = document.getElementById("convert-btn");
 const swapBtn = document.getElementById("swap-btn");
 const resultText = document.getElementById("result-text");
+const resultDetail = document.getElementById("result-detail");
 
 // Fill both dropdowns from a { code: name } map, sorted alphabetically by code
 function fillDropdowns(currencyMap) {
@@ -36,7 +37,10 @@ function fillDropdowns(currencyMap) {
 
     sortedCodes.forEach(code => {
         const upperCode = code.toUpperCase();
-        const label = `${upperCode} - ${currencyMap[code]}`;
+        const countryInfo = getCurrencyCountry(upperCode);
+        const label = countryInfo
+            ? `${countryInfo.flag} ${upperCode} - ${currencyMap[code]} (${countryInfo.country})`
+            : `${upperCode} - ${currencyMap[code]}`;
 
         fromSelect.add(new Option(label, upperCode));
         toSelect.add(new Option(label, upperCode));
@@ -102,10 +106,12 @@ async function convertCurrency() {
     // Validation guard clause
     if (isNaN(amount) || amount <= 0) {
         resultText.innerText = "Please enter a valid amount.";
+        resultDetail.innerText = "";
         return;
     }
 
     resultText.innerText = "Converting...";
+    resultDetail.innerText = "";
 
     try {
         // Fetch target rates relative to base currency
@@ -119,11 +125,21 @@ async function convertCurrency() {
         
         resultText.innerText = `${amount} ${fromCurr.toUpperCase()} = ${total} ${toCurr.toUpperCase()}`;
 
+        // Show which countries these currencies belong to, when known
+        const fromInfo = getCurrencyCountry(fromCurr);
+        const toInfo = getCurrencyCountry(toCurr);
+        if (fromInfo || toInfo) {
+            const fromLabel = fromInfo ? `${fromInfo.flag} ${fromInfo.country}` : fromCurr.toUpperCase();
+            const toLabel = toInfo ? `${toInfo.flag} ${toInfo.country}` : toCurr.toUpperCase();
+            resultDetail.innerText = `${fromLabel} → ${toLabel}`;
+        }
+
         // Save to history (non-blocking)
         logConversion(amount, fromCurr, toCurr, total);
     } catch (error) {
         console.error("Error fetching data: ", error);
         resultText.innerText = "Error loading exchange rates. Try again.";
+        resultDetail.innerText = "";
     }
 }
 
