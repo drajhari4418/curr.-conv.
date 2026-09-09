@@ -15,6 +15,8 @@ const statLastConversion = document.getElementById("stat-last-conversion");
 
 const HISTORY_LIMIT = 20; // how many recent rows to display in the table
 
+let currentRows = []; // rows currently loaded for the logged-in user
+
 // Guard: redirect to the converter/login page if there's no active session
 async function requireSession() {
     const { data } = await supabaseClient.auth.getSession();
@@ -81,6 +83,7 @@ function renderTable(rows) {
             <td>${row.from_currency}</td>
             <td>${row.to_currency}</td>
             <td>${row.result}</td>
+            <td><button class="delete-btn" data-id="${row.id}" title="Delete this conversion">🗑</button></td>
         `;
         tableBodyEl.appendChild(tr);
     });
@@ -92,7 +95,7 @@ async function loadDashboard() {
 
     const { data: rows, error } = await supabaseClient
         .from("conversions")
-        .select("amount, from_currency, to_currency, result, created_at")
+        .select("id, amount, from_currency, to_currency, result, created_at")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
@@ -107,16 +110,57 @@ async function loadDashboard() {
         return;
     }
 
-    if (!rows || rows.length === 0) {
+    currentRows = rows || [];
+    renderDashboard();
+}
+
+// Redraws stats + table + empty state from the current in-memory rows.
+// Called after the initial load and again after a delete, so we don't
+// need a full round trip to Supabase just to reflect a removed row.
+function renderDashboard() {
+    if (currentRows.length === 0) {
+        emptyEl.innerText = "No conversions yet. Head back to the converter and make your first one!";
         emptyEl.style.display = "block";
         tableEl.style.display = "none";
         renderStats(computeStats([]));
         return;
     }
 
-    renderStats(computeStats(rows));
-    renderTable(rows);
+    emptyEl.style.display = "none";
+    tableEl.style.display = "table";
+    renderStats(computeStats(currentRows));
+    renderTable(currentRows);
 }
+
+// Delete a single conversion row (both from Supabase and from the
+// in-memory list), then redraw the stats/table to reflect the removal.
+async function deleteConversion(id) {
+    const { error } = await supabaseClient
+        .from("conversions")
+        .delete()
+        .eq("id", id);
+
+    if (error) {
+        console.error("Failed to delete conversion:", error);
+        alert("Couldn't delete that entry. Please try again.");
+        return;
+    }
+
+    currentRows = currentRows.filter((row) => row.id !== Number(id));
+    renderDashboard();
+}
+
+// Event delegation: catches clicks on any .delete-btn, including ones
+// added after the initial render, without re-binding listeners each time.
+tableBodyEl.addEventListener("click", (e) => {
+    const btn = e.target.closest(".delete-btn");
+    if (!btn) return;
+
+    const id = btn.dataset.id;
+    if (confirm("Delete this conversion from your history?")) {
+        deleteConversion(id);
+    }
+});
 
 async function handleLogout() {
     await supabaseClient.auth.signOut();
