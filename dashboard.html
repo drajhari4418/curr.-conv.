@@ -4,10 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Currency Converter</title>
+    <script>
+        (function () {
+            var savedTheme = localStorage.getItem("theme") || "light";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+        })();
+    </script>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+    <button id="theme-toggle" class="theme-toggle-btn" title="Toggle theme">🌙</button>
+
     <div class="converter-card wide" id="dashboard-card">
         <div class="app-header">
             <div>
@@ -67,6 +75,7 @@
         </div>
     </div>
 
+    <script src="theme.js"></script>
     <script src="supabase-client.js"></script>
     <script src="dashboard.js"></script>
 </body>

@@ -4,10 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Currency Converter</title>
+    <script>
+        // Applied immediately (before CSS/first paint) to avoid a flash of
+        // the wrong theme on load. Kept tiny and inline on purpose.
+        (function () {
+            var savedTheme = localStorage.getItem("theme") || "light";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+        })();
+    </script>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+    <button id="theme-toggle" class="theme-toggle-btn" title="Toggle theme">🌙</button>
+
     <!-- Login gate: shown until a valid Supabase session exists -->
     <div class="converter-card" id="login-screen">
         <h2>Sign In</h2>
@@ -141,6 +151,7 @@
         </div>
     </div>
 
+    <script src="theme.js"></script>
     <script src="supabase-client.js"></script>
     <script src="auth.js"></script>
     <script src="currency-meta.js"></script>

@@ -1,3 +1,52 @@
+/* ===================== Theme variables ===================== */
+:root {
+    --bg-gradient-start: #667eea;
+    --bg-gradient-end: #764ba2;
+    --card-bg: #ffffff;
+    --text-primary: #333333;
+    --text-secondary: #666666;
+    --text-muted: #888888;
+    --text-result: #2d3748;
+    --accent: #667eea;
+    --accent-hover: #5a6fd6;
+    --input-border: #dddddd;
+    --input-bg: #ffffff;
+    --result-bg: #f8f9fa;
+    --ghost-btn-bg: #f0f2f5;
+    --ghost-btn-hover: #e2e5e9;
+    --table-border: #eeeeee;
+    --table-header-bg: #f8f9fa;
+    --table-header-text: #555555;
+    --row-hover-bg: #fafbff;
+    --error-color: #e53e3e;
+    --delete-hover-bg: #fee2e2;
+    --shadow-color: rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] {
+    --bg-gradient-start: #0f0f1a;
+    --bg-gradient-end: #1a1a2e;
+    --card-bg: #1e293b;
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --text-result: #f1f5f9;
+    --accent: #818cf8;
+    --accent-hover: #6366f1;
+    --input-border: #334155;
+    --input-bg: #0f172a;
+    --result-bg: #0f172a;
+    --ghost-btn-bg: #334155;
+    --ghost-btn-hover: #475569;
+    --table-border: #334155;
+    --table-header-bg: #0f172a;
+    --table-header-text: #94a3b8;
+    --row-hover-bg: #24324a;
+    --error-color: #f87171;
+    --delete-hover-bg: #451a1a;
+    --shadow-color: rgba(0, 0, 0, 0.6);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,22 +55,49 @@
 }
 
 body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
+    transition: background 0.3s ease;
+}
+
+/* ===================== Theme toggle button ===================== */
+.theme-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: var(--card-bg);
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: transform 0.2s, background 0.3s;
+}
+
+.theme-toggle-btn:hover {
+    transform: scale(1.08);
 }
 
 .converter-card {
-    background: #ffffff;
+    background: var(--card-bg);
     padding: 30px;
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 30px var(--shadow-color);
     width: 60%;
     min-width: 320px;   /* don't let it get too cramped on small screens */
     max-width: 900px;   /* don't let it stretch too wide on huge monitors */
+    transition: background 0.3s ease;
 }
 
 /* Post-signin converter: wider than the sign-in card */
@@ -46,7 +122,7 @@ body {
 }
 
 h2 {
-    color: #333;
+    color: var(--text-primary);
     margin-bottom: 24px;
     text-align: center;
     font-size: 1.5rem;
@@ -67,7 +143,7 @@ h2 {
 .user-greeting {
     margin-top: 2px;
     font-size: 0.85rem;
-    color: #667eea;
+    color: var(--accent);
     font-weight: 600;
 }
 
@@ -78,12 +154,12 @@ h2 {
 }
 
 #logout-btn, .ghost-btn {
-    background: #f0f2f5;
+    background: var(--ghost-btn-bg);
     border: none;
     padding: 8px 14px;
     border-radius: 8px;
     cursor: pointer;
-    color: #667eea;
+    color: var(--accent);
     font-size: 0.85rem;
     font-weight: 600;
     transition: background 0.2s;
@@ -92,7 +168,24 @@ h2 {
 }
 
 #logout-btn:hover, .ghost-btn:hover {
-    background: #e2e5e9;
+    background: var(--ghost-btn-hover);
+}
+
+/* Draws attention to the Dashboard link with a periodic glow every 3s */
+#dashboard-link {
+    animation: dashboardPulse 3s ease-in-out infinite;
+}
+
+@keyframes dashboardPulse {
+    0%, 60%, 100% {
+        box-shadow: 0 0 0 rgba(102, 126, 234, 0);
+    }
+    75% {
+        box-shadow: 0 0 0 6px rgba(102, 126, 234, 0.25);
+    }
+    85% {
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.35);
+    }
 }
 
 .link-row {
@@ -102,7 +195,7 @@ h2 {
 }
 
 .link-row a {
-    color: #667eea;
+    color: var(--accent);
     text-decoration: none;
     font-weight: 600;
 }
@@ -112,18 +205,18 @@ h2 {
 }
 
 #login-error {
-    border-left-color: #e53e3e;
+    border-left-color: var(--error-color);
 }
 
 #login-error-text {
-    color: #e53e3e;
+    color: var(--error-color);
     font-size: 0.95rem;
 }
 
 label {
     display: block;
     font-size: 0.85rem;
-    color: #666;
+    color: var(--text-secondary);
     margin-bottom: 6px;
     font-weight: 600;
 }
@@ -132,18 +225,20 @@ label {
     margin-bottom: 20px;
 }
 
-input[type="number"], input[type="email"], input[type="password"], select {
+input[type="number"], input[type="email"], input[type="password"], input[type="text"], select {
     width: 100%;
     padding: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--input-border);
     border-radius: 8px;
     font-size: 1rem;
     outline: none;
-    transition: border-color 0.2s;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    transition: border-color 0.2s, background 0.3s, color 0.3s;
 }
 
-input[type="number"]:focus, select:focus {
-    border-color: #667eea;
+input[type="number"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, select:focus {
+    border-color: var(--accent);
 }
 
 .selection-group {
@@ -158,24 +253,24 @@ input[type="number"]:focus, select:focus {
 }
 
 #swap-btn {
-    background: #f0f2f5;
+    background: var(--ghost-btn-bg);
     border: none;
     font-size: 1.5rem;
     padding: 8px 12px;
     border-radius: 8px;
     cursor: pointer;
-    color: #667eea;
+    color: var(--accent);
     height: 46px;
     transition: background 0.2s;
 }
 
 #swap-btn:hover {
-    background: #e2e5e9;
+    background: var(--ghost-btn-hover);
 }
 
 #convert-btn {
     width: 100%;
-    background: #667eea;
+    background: var(--accent);
     color: white;
     border: none;
     padding: 14px;
@@ -187,28 +282,29 @@ input[type="number"]:focus, select:focus {
 }
 
 #convert-btn:hover {
-    background: #5a6fd6;
+    background: var(--accent-hover);
 }
 
 .result-box {
     margin-top: 24px;
     padding: 15px;
-    background: #f8f9fa;
-    border-left: 4px solid #667eea;
+    background: var(--result-bg);
+    border-left: 4px solid var(--accent);
     border-radius: 4px;
     text-align: center;
+    transition: background 0.3s;
 }
 
 #result-text {
     font-size: 1.2rem;
-    color: #2d3748;
+    color: var(--text-result);
     font-weight: 600;
 }
 
 .result-detail {
     margin-top: 6px;
     font-size: 0.85rem;
-    color: #667eea;
+    color: var(--accent);
     font-weight: 600;
 }
 
@@ -222,30 +318,31 @@ input[type="number"]:focus, select:focus {
 }
 
 .stat-card {
-    background: #f8f9fa;
-    border-left: 4px solid #667eea;
+    background: var(--result-bg);
+    border-left: 4px solid var(--accent);
     border-radius: 8px;
     padding: 16px;
     text-align: center;
+    transition: background 0.3s;
 }
 
 .stat-card .stat-value {
     font-size: 1.6rem;
     font-weight: 700;
-    color: #2d3748;
+    color: var(--text-result);
     margin-bottom: 4px;
 }
 
 .stat-card .stat-label {
     font-size: 0.8rem;
-    color: #666;
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.03em;
 }
 
 .section-title {
     font-size: 1.05rem;
-    color: #333;
+    color: var(--text-primary);
     font-weight: 700;
     margin-bottom: 14px;
 }
@@ -253,7 +350,7 @@ input[type="number"]:focus, select:focus {
 .history-table-wrap {
     overflow-x: auto;
     border-radius: 8px;
-    border: 1px solid #eee;
+    border: 1px solid var(--table-border);
 }
 
 table.history-table {
@@ -266,22 +363,23 @@ table.history-table th, table.history-table td {
     padding: 10px 14px;
     text-align: left;
     white-space: nowrap;
+    color: var(--text-primary);
 }
 
 table.history-table thead th {
-    background: #f8f9fa;
-    color: #555;
+    background: var(--table-header-bg);
+    color: var(--table-header-text);
     font-size: 0.78rem;
     text-transform: uppercase;
     letter-spacing: 0.03em;
 }
 
 table.history-table tbody tr {
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--table-border);
 }
 
 table.history-table tbody tr:hover {
-    background: #fafbff;
+    background: var(--row-hover-bg);
 }
 
 .delete-btn {
@@ -297,18 +395,18 @@ table.history-table tbody tr:hover {
 
 .delete-btn:hover {
     opacity: 1;
-    background: #fee2e2;
+    background: var(--delete-hover-bg);
 }
 
 .empty-state {
     text-align: center;
-    color: #888;
+    color: var(--text-muted);
     padding: 30px 10px;
     font-size: 0.95rem;
 }
 
 .dashboard-loading {
     text-align: center;
-    color: #888;
+    color: var(--text-muted);
     padding: 20px;
 }
