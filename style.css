@@ -376,6 +376,14 @@ input[type="number"]:focus, input[type="email"]:focus, input[type="password"]:fo
     text-align: center;
 }
 
+.trend-status {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-align: center;
+    font-style: italic;
+}
+
 /* ===================== Dashboard-specific styles ===================== */
 
 .stats-grid {
