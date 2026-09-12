@@ -308,6 +308,74 @@ input[type="number"]:focus, input[type="email"]:focus, input[type="password"]:fo
     font-weight: 600;
 }
 
+/* ===================== Trend & forecast section ===================== */
+
+.trend-section {
+    margin-top: 16px;
+}
+
+.trend-btn {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+}
+
+.trend-panel {
+    margin-top: 14px;
+    padding: 16px;
+    background: var(--result-bg);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+}
+
+.trend-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.trend-label {
+    font-weight: 700;
+    color: var(--text-result);
+    font-size: 0.95rem;
+}
+
+.trend-change {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.trend-sparkline {
+    display: block;
+    width: 100%;
+    height: 70px;
+}
+
+.trend-forecast {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.trend-disclaimer {
+    margin-top: 8px;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.trend-error {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: var(--error-color);
+    text-align: center;
+}
+
 /* ===================== Dashboard-specific styles ===================== */
 
 .stats-grid {

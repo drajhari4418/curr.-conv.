@@ -149,6 +149,22 @@
             <p id="result-text">Fetching latest rates...</p>
             <p id="result-detail" class="result-detail"></p>
         </div>
+
+        <div class="trend-section">
+            <button id="trend-btn" type="button" class="ghost-btn trend-btn">📈 Show Trend & Forecast</button>
+
+            <div id="trend-panel" class="trend-panel" style="display:none;">
+                <div class="trend-header">
+                    <span id="trend-label" class="trend-label"></span>
+                    <span id="trend-change" class="trend-change"></span>
+                </div>
+                <svg id="trend-sparkline" class="trend-sparkline"></svg>
+                <p id="trend-forecast" class="trend-forecast"></p>
+                <p class="trend-disclaimer">Based on a simple linear trend over recent historical rates - for educational purposes only, not financial advice.</p>
+            </div>
+
+            <p id="trend-error" class="trend-error" style="display:none;"></p>
+        </div>
     </div>
 
     <script src="theme.js"></script>
@@ -156,5 +172,6 @@
     <script src="auth.js"></script>
     <script src="currency-meta.js"></script>
     <script src="script.js"></script>
+    <script src="trend.js"></script>
 </body>
 </html>
