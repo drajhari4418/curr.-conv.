@@ -26,6 +26,7 @@
     --btn-primary: #667eea;     /* solid buttons with white text */
     --btn-primary-hover: #5a6fd6;
     --danger: #e53e3e;
+    --forecast: #dd6b20;        /* forecast line + band */
 }
 
 :root[data-theme="dark"] {
@@ -53,6 +54,7 @@
     --btn-primary: #667eea;
     --btn-primary-hover: #5a6fd6;
     --danger: #fc8181;
+    --forecast: #f6ad55;
 }
 
 * {
@@ -430,4 +432,126 @@ table.history-table tbody tr:hover {
     color: rgba(255, 255, 255, 0.9);
     letter-spacing: 0.02em;
     background: rgba(0, 0, 0, 0.15);   /* subtle dark band, remove if you prefer none */
+}
+
+/* ===================== 30-day trend & forecast ===================== */
+
+.secondary-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    background: var(--btn-bg);
+    color: var(--accent);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.secondary-btn:hover {
+    background: var(--btn-bg-hover);
+}
+
+.secondary-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.forecast-box {
+    margin-top: 20px;
+}
+
+.forecast-status {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.forecast-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.forecast-svg .grid {
+    stroke: var(--border);
+    stroke-width: 1;
+}
+
+.forecast-svg .axis-label {
+    fill: var(--text-muted);
+    font-size: 11px;
+}
+
+.forecast-svg .divider {
+    stroke: var(--text-faint);
+    stroke-width: 1;
+    stroke-dasharray: 2 4;
+}
+
+.forecast-svg .line-history {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2.2;
+    stroke-linejoin: round;
+}
+
+.forecast-svg .line-forecast {
+    fill: none;
+    stroke: var(--forecast);
+    stroke-width: 2.2;
+    stroke-dasharray: 6 4;
+}
+
+.forecast-svg .band {
+    fill: var(--forecast);
+    opacity: 0.16;
+}
+
+.forecast-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin: 8px 0 16px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.forecast-legend .swatch {
+    display: inline-block;
+    width: 18px;
+    height: 0;
+    margin-right: 6px;
+    vertical-align: middle;
+    border-top: 3px solid var(--accent);
+}
+
+.forecast-legend .swatch-forecast {
+    border-top: 3px dashed var(--forecast);
+}
+
+.forecast-legend .swatch-band {
+    height: 10px;
+    border-top: none;
+    background: var(--forecast);
+    opacity: 0.35;
+    border-radius: 2px;
+}
+
+.forecast-box .stat-card .stat-value {
+    font-size: 1.2rem;
+}
+
+.forecast-box .stats-grid {
+    margin-bottom: 12px;
+}
+
+.forecast-note {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--text-faint);
 }

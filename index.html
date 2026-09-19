@@ -158,6 +158,24 @@
             <p id="result-text">Fetching latest rates...</p>
             <p id="result-detail" class="result-detail"></p>
         </div>
+
+        <!-- 30-day trend & forecast (filled in by forecast.js) -->
+        <button id="forecast-btn" class="secondary-btn" type="button">📈 30-day trend &amp; forecast</button>
+
+        <div class="forecast-box" id="forecast-box" style="display:none;">
+            <p id="forecast-status" class="forecast-status"></p>
+            <div id="forecast-chart"></div>
+
+            <div id="forecast-details" style="display:none;">
+                <div class="forecast-legend">
+                    <span><i class="swatch swatch-history"></i>Past 30 days</span>
+                    <span><i class="swatch swatch-forecast"></i>Forecast</span>
+                    <span><i class="swatch swatch-band"></i>Typical swing</span>
+                </div>
+                <div id="forecast-summary" class="stats-grid"></div>
+                <p class="forecast-note">The forecast extends the past 30 days' trend in a straight line. It's an estimate, not financial advice.</p>
+            </div>
+        </div>
     </div>
 
     <!-- Footer: credit line shown on every screen -->
@@ -169,5 +187,6 @@
     <script src="auth.js"></script>
     <script src="currency-meta.js"></script>
     <script src="script.js"></script>
+    <script src="forecast.js"></script>
 </body>
 </html>
