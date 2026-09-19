@@ -1,50 +1,58 @@
 /* ===================== Theme variables ===================== */
+/* Light is the default. theme.js sets data-theme="dark" on <html> for dark mode. */
+
 :root {
-    --bg-gradient-start: #667eea;
-    --bg-gradient-end: #764ba2;
+    color-scheme: light;
+
+    --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --card-bg: #ffffff;
-    --text-primary: #333333;
-    --text-secondary: #666666;
-    --text-muted: #888888;
-    --text-result: #2d3748;
-    --accent: #667eea;
-    --accent-hover: #5a6fd6;
-    --input-border: #dddddd;
+    --shadow: rgba(0, 0, 0, 0.15);
+
+    --heading: #333333;
+    --text: #2d3748;
+    --text-muted: #666666;
+    --text-faint: #888888;
+    --th-color: #555555;
+
+    --surface: #f8f9fa;
+    --btn-bg: #f0f2f5;
+    --btn-bg-hover: #e2e5e9;
     --input-bg: #ffffff;
-    --result-bg: #f8f9fa;
-    --ghost-btn-bg: #f0f2f5;
-    --ghost-btn-hover: #e2e5e9;
-    --table-border: #eeeeee;
-    --table-header-bg: #f8f9fa;
-    --table-header-text: #555555;
-    --row-hover-bg: #fafbff;
-    --error-color: #e53e3e;
-    --delete-hover-bg: #fee2e2;
-    --shadow-color: rgba(0, 0, 0, 0.15);
+    --input-border: #dddddd;
+    --border: #eeeeee;
+    --row-hover: #fafbff;
+
+    --accent: #667eea;          /* links, greeting, borders, small text buttons */
+    --btn-primary: #667eea;     /* solid buttons with white text */
+    --btn-primary-hover: #5a6fd6;
+    --danger: #e53e3e;
 }
 
-[data-theme="dark"] {
-    --bg-gradient-start: #0f0f1a;
-    --bg-gradient-end: #1a1a2e;
-    --card-bg: #1e293b;
-    --text-primary: #e2e8f0;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --text-result: #f1f5f9;
-    --accent: #818cf8;
-    --accent-hover: #6366f1;
-    --input-border: #334155;
-    --input-bg: #0f172a;
-    --result-bg: #0f172a;
-    --ghost-btn-bg: #334155;
-    --ghost-btn-hover: #475569;
-    --table-border: #334155;
-    --table-header-bg: #0f172a;
-    --table-header-text: #94a3b8;
-    --row-hover-bg: #24324a;
-    --error-color: #f87171;
-    --delete-hover-bg: #451a1a;
-    --shadow-color: rgba(0, 0, 0, 0.6);
+:root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --bg-gradient: linear-gradient(135deg, #1b1f3a 0%, #2b1d47 100%);
+    --card-bg: #1e2233;
+    --shadow: rgba(0, 0, 0, 0.5);
+
+    --heading: #f1f3f9;
+    --text: #e4e7f0;
+    --text-muted: #a4abc2;
+    --text-faint: #8a92aa;
+    --th-color: #b5bbd1;
+
+    --surface: #272c42;
+    --btn-bg: #2c3250;
+    --btn-bg-hover: #363d60;
+    --input-bg: #171a29;
+    --input-border: #3a4160;
+    --border: #323853;
+    --row-hover: #252a44;
+
+    --accent: #8b9cf7;
+    --btn-primary: #667eea;
+    --btn-primary-hover: #5a6fd6;
+    --danger: #fc8181;
 }
 
 * {
@@ -55,49 +63,25 @@
 }
 
 body {
-    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    background: var(--bg-gradient);
     min-height: 100vh;
     display: flex;
+    flex-direction: column;   /* stack card and footer vertically */
     justify-content: center;
     align-items: center;
-    padding: 20px;
-    transition: background 0.3s ease;
-}
-
-/* ===================== Theme toggle button ===================== */
-.theme-toggle-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: none;
-    background: var(--card-bg);
-    color: var(--text-primary);
-    font-size: 1.2rem;
-    cursor: pointer;
-    box-shadow: 0 4px 12px var(--shadow-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    transition: transform 0.2s, background 0.3s;
-}
-
-.theme-toggle-btn:hover {
-    transform: scale(1.08);
+    padding: 20px 20px 0;     /* no bottom padding so the footer touches the bottom edge */
 }
 
 .converter-card {
     background: var(--card-bg);
     padding: 30px;
     border-radius: 16px;
-    box-shadow: 0 10px 30px var(--shadow-color);
+    box-shadow: 0 10px 30px var(--shadow);
     width: 60%;
     min-width: 320px;   /* don't let it get too cramped on small screens */
     max-width: 900px;   /* don't let it stretch too wide on huge monitors */
-    transition: background 0.3s ease;
+    margin: auto 0;     /* centers the card in the space above the footer */
+    transition: background 0.2s;
 }
 
 /* Post-signin converter: wider than the sign-in card */
@@ -122,7 +106,7 @@ body {
 }
 
 h2 {
-    color: var(--text-primary);
+    color: var(--heading);
     margin-bottom: 24px;
     text-align: center;
     font-size: 1.5rem;
@@ -154,7 +138,7 @@ h2 {
 }
 
 #logout-btn, .ghost-btn {
-    background: var(--ghost-btn-bg);
+    background: var(--btn-bg);
     border: none;
     padding: 8px 14px;
     border-radius: 8px;
@@ -168,30 +152,14 @@ h2 {
 }
 
 #logout-btn:hover, .ghost-btn:hover {
-    background: var(--ghost-btn-hover);
-}
-
-/* Draws attention to the Dashboard link with a periodic glow every 3s */
-#dashboard-link {
-    animation: dashboardPulse 3s ease-in-out infinite;
-}
-
-@keyframes dashboardPulse {
-    0%, 60%, 100% {
-        box-shadow: 0 0 0 rgba(102, 126, 234, 0);
-    }
-    75% {
-        box-shadow: 0 0 0 6px rgba(102, 126, 234, 0.25);
-    }
-    85% {
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.35);
-    }
+    background: var(--btn-bg-hover);
 }
 
 .link-row {
     text-align: center;
     margin-top: 16px;
     font-size: 0.85rem;
+    color: var(--text-muted);
 }
 
 .link-row a {
@@ -205,18 +173,18 @@ h2 {
 }
 
 #login-error {
-    border-left-color: var(--error-color);
+    border-left-color: var(--danger);
 }
 
 #login-error-text {
-    color: var(--error-color);
+    color: var(--danger);
     font-size: 0.95rem;
 }
 
 label {
     display: block;
     font-size: 0.85rem;
-    color: var(--text-secondary);
+    color: var(--text-muted);
     margin-bottom: 6px;
     font-weight: 600;
 }
@@ -233,8 +201,8 @@ input[type="number"], input[type="email"], input[type="password"], input[type="t
     font-size: 1rem;
     outline: none;
     background: var(--input-bg);
-    color: var(--text-primary);
-    transition: border-color 0.2s, background 0.3s, color 0.3s;
+    color: var(--text);
+    transition: border-color 0.2s;
 }
 
 input[type="number"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, select:focus {
@@ -253,7 +221,7 @@ input[type="number"]:focus, input[type="email"]:focus, input[type="password"]:fo
 }
 
 #swap-btn {
-    background: var(--ghost-btn-bg);
+    background: var(--btn-bg);
     border: none;
     font-size: 1.5rem;
     padding: 8px 12px;
@@ -265,12 +233,12 @@ input[type="number"]:focus, input[type="email"]:focus, input[type="password"]:fo
 }
 
 #swap-btn:hover {
-    background: var(--ghost-btn-hover);
+    background: var(--btn-bg-hover);
 }
 
 #convert-btn {
     width: 100%;
-    background: var(--accent);
+    background: var(--btn-primary);
     color: white;
     border: none;
     padding: 14px;
@@ -282,22 +250,25 @@ input[type="number"]:focus, input[type="email"]:focus, input[type="password"]:fo
 }
 
 #convert-btn:hover {
-    background: var(--accent-hover);
+    background: var(--btn-primary-hover);
 }
 
 .result-box {
     margin-top: 24px;
     padding: 15px;
-    background: var(--result-bg);
+    background: var(--surface);
     border-left: 4px solid var(--accent);
     border-radius: 4px;
     text-align: center;
-    transition: background 0.3s;
+}
+
+.result-box p {
+    color: var(--text);
 }
 
 #result-text {
     font-size: 1.2rem;
-    color: var(--text-result);
+    color: var(--text);
     font-weight: 600;
 }
 
@@ -308,80 +279,58 @@ input[type="number"]:focus, input[type="email"]:focus, input[type="password"]:fo
     font-weight: 600;
 }
 
-/* ===================== Trend & forecast section ===================== */
+/* ===================== Show / hide password ===================== */
 
-.trend-section {
-    margin-top: 16px;
+.password-wrap {
+    position: relative;
 }
 
-.trend-btn {
-    width: 100%;
-    text-align: center;
-    padding: 12px;
+.password-wrap input[type="password"],
+.password-wrap input[type="text"] {
+    padding-right: 68px;   /* leave room for the Show/Hide button */
 }
 
-.trend-panel {
-    margin-top: 14px;
-    padding: 16px;
-    background: var(--result-bg);
-    border-radius: 8px;
-    border-left: 4px solid var(--accent);
-}
-
-.trend-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
-.trend-label {
-    font-weight: 700;
-    color: var(--text-result);
-    font-size: 0.95rem;
-}
-
-.trend-change {
-    font-size: 0.85rem;
-    font-weight: 600;
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
     color: var(--accent);
-}
-
-.trend-sparkline {
-    display: block;
-    width: 100%;
-    height: 70px;
-}
-
-.trend-forecast {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    color: var(--text-primary);
+    font-size: 0.8rem;
     font-weight: 600;
+    transition: background 0.2s;
 }
 
-.trend-disclaimer {
-    margin-top: 8px;
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    line-height: 1.4;
+.toggle-password:hover {
+    background: var(--btn-bg);
 }
 
-.trend-error {
-    margin-top: 10px;
-    font-size: 0.85rem;
-    color: var(--error-color);
-    text-align: center;
+/* ===================== Dark / light mode button ===================== */
+
+.theme-toggle {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 100;
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    font-size: 1.15rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
-.trend-status {
-    margin-top: 10px;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    text-align: center;
-    font-style: italic;
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.36);
 }
 
 /* ===================== Dashboard-specific styles ===================== */
@@ -394,31 +343,30 @@ input[type="number"]:focus, input[type="email"]:focus, input[type="password"]:fo
 }
 
 .stat-card {
-    background: var(--result-bg);
+    background: var(--surface);
     border-left: 4px solid var(--accent);
     border-radius: 8px;
     padding: 16px;
     text-align: center;
-    transition: background 0.3s;
 }
 
 .stat-card .stat-value {
     font-size: 1.6rem;
     font-weight: 700;
-    color: var(--text-result);
+    color: var(--text);
     margin-bottom: 4px;
 }
 
 .stat-card .stat-label {
     font-size: 0.8rem;
-    color: var(--text-secondary);
+    color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.03em;
 }
 
 .section-title {
     font-size: 1.05rem;
-    color: var(--text-primary);
+    color: var(--heading);
     font-weight: 700;
     margin-bottom: 14px;
 }
@@ -426,63 +374,60 @@ input[type="number"]:focus, input[type="email"]:focus, input[type="password"]:fo
 .history-table-wrap {
     overflow-x: auto;
     border-radius: 8px;
-    border: 1px solid var(--table-border);
+    border: 1px solid var(--border);
 }
 
 table.history-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
+    color: var(--text);
 }
 
 table.history-table th, table.history-table td {
     padding: 10px 14px;
     text-align: left;
     white-space: nowrap;
-    color: var(--text-primary);
 }
 
 table.history-table thead th {
-    background: var(--table-header-bg);
-    color: var(--table-header-text);
+    background: var(--surface);
+    color: var(--th-color);
     font-size: 0.78rem;
     text-transform: uppercase;
     letter-spacing: 0.03em;
 }
 
 table.history-table tbody tr {
-    border-top: 1px solid var(--table-border);
+    border-top: 1px solid var(--border);
 }
 
 table.history-table tbody tr:hover {
-    background: var(--row-hover-bg);
-}
-
-.delete-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 4px 8px;
-    border-radius: 6px;
-    opacity: 0.6;
-    transition: opacity 0.2s, background 0.2s;
-}
-
-.delete-btn:hover {
-    opacity: 1;
-    background: var(--delete-hover-bg);
+    background: var(--row-hover);
 }
 
 .empty-state {
     text-align: center;
-    color: var(--text-muted);
+    color: var(--text-faint);
     padding: 30px 10px;
     font-size: 0.95rem;
 }
 
 .dashboard-loading {
     text-align: center;
-    color: var(--text-muted);
+    color: var(--text-faint);
     padding: 20px;
+}
+
+/* ===================== Footer ===================== */
+
+.site-footer {
+    align-self: stretch;          /* span the full width of the page */
+    margin: 20px -20px 0;         /* cancel the body's 20px side padding */
+    padding: 14px 20px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.02em;
+    background: rgba(0, 0, 0, 0.15);   /* subtle dark band, remove if you prefer none */
 }

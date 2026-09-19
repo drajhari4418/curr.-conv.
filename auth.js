@@ -39,10 +39,31 @@ const saveNewPasswordBtn = document.getElementById("save-new-password-btn");
 const newPasswordMsg = document.getElementById("new-password-msg");
 const newPasswordMsgText = document.getElementById("new-password-msg-text");
 
+// DOM elements - show/hide password buttons (one per password field)
+const passwordToggles = document.querySelectorAll(".toggle-password");
+
 // All gate screens, for easy show/hide
 const allScreens = [loginScreen, signupScreen, forgotPasswordScreen, newPasswordScreen, appContent];
 
+// Put a password field (and its Show/Hide button) into the given state
+function setPasswordVisible(btn, visible) {
+    const input = document.getElementById(btn.dataset.target);
+    if (!input) return;
+
+    input.type = visible ? "text" : "password";
+    btn.innerText = visible ? "Hide" : "Show";
+    btn.title = visible ? "Hide password" : "Show password";
+    btn.setAttribute("aria-label", btn.title);
+}
+
+// Hide every password again - called on each screen change so a password
+// left visible on one screen is never still visible on the next.
+function resetPasswordToggles() {
+    passwordToggles.forEach((btn) => setPasswordVisible(btn, false));
+}
+
 function showScreen(screen) {
+    resetPasswordToggles();
     allScreens.forEach((s) => (s.style.display = "none"));
     screen.style.display = "block";
 }
@@ -60,11 +81,13 @@ function showLoginError(message) {
     loginError.style.display = "block";
 }
 
+// Colors use CSS variables so messages stay readable in both light and dark mode.
+// An empty color falls back to the stylesheet default (.result-box p).
 function showMessage(el, textEl, message, isError) {
     textEl.innerText = message;
     el.style.display = "block";
-    el.style.borderLeftColor = isError ? "#e53e3e" : "#667eea";
-    textEl.style.color = isError ? "#e53e3e" : "#2d3748";
+    el.style.borderLeftColor = isError ? "var(--danger)" : "var(--accent)";
+    textEl.style.color = isError ? "var(--danger)" : "";
 }
 
 // Check for an existing session on page load.
@@ -251,6 +274,15 @@ signupBtn.addEventListener("click", handleSignup);
 logoutBtn.addEventListener("click", handleLogout);
 sendResetBtn.addEventListener("click", handleSendReset);
 saveNewPasswordBtn.addEventListener("click", handleSaveNewPassword);
+
+// Show/hide password: flip the field between type="password" and type="text"
+passwordToggles.forEach((btn) => {
+    btn.addEventListener("click", () => {
+        const input = document.getElementById(btn.dataset.target);
+        if (!input) return;
+        setPasswordVisible(btn, input.type === "password");
+    });
+});
 
 goToSignupLink.addEventListener("click", (e) => {
     e.preventDefault();
