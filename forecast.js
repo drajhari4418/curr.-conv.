@@ -187,9 +187,8 @@ function statCard(value, label) {
 /* ---------- wiring ---------- */
 
 function initForecast() {
-    const btn = document.getElementById("forecast-btn");
     const box = document.getElementById("forecast-box");
-    if (!btn || !box) return; // not on this page
+    if (!box) return; // not on this page
 
     const statusEl = document.getElementById("forecast-status");
     const chartEl = document.getElementById("forecast-chart");
@@ -199,7 +198,11 @@ function initForecast() {
     const fromEl = document.getElementById("from-currency");
     const toEl = document.getElementById("to-currency");
     const amountEl = document.getElementById("amount");
+    const convertEl = document.getElementById("convert-btn");
     const swapEl = document.getElementById("swap-btn");
+
+    // Bumped on every run/hide so a slow, older request can't overwrite a newer one
+    let latestRequest = 0;
 
     function clearResults() {
         chartEl.innerHTML = "";
@@ -208,19 +211,22 @@ function initForecast() {
     }
 
     function hideForecast() {
+        latestRequest++;
         box.style.display = "none";
         clearResults();
     }
 
-    // A different pair makes the old chart wrong, so drop it
-    fromEl.addEventListener("change", hideForecast);
-    toEl.addEventListener("change", hideForecast);
-    swapEl.addEventListener("click", hideForecast);
-
-    btn.addEventListener("click", async () => {
+    async function runForecast() {
+        const requestId = ++latestRequest;
         const from = fromEl.value.toLowerCase();
         const to = toEl.value.toLowerCase();
-        const amount = parseFloat(amountEl.value) || 1;
+        const amount = parseFloat(amountEl.value);
+
+        // Invalid amount: the converter already shows its own error, so no forecast
+        if (isNaN(amount) || amount <= 0) {
+            hideForecast();
+            return;
+        }
 
         box.style.display = "block";
         clearResults();
@@ -230,11 +236,11 @@ function initForecast() {
             return;
         }
 
-        btn.disabled = true;
         statusEl.innerText = `Loading the last ${HISTORY_DAYS} days of ${from.toUpperCase()} → ${to.toUpperCase()} rates...`;
 
         try {
             const history = await fetchHistory(from, to);
+            if (requestId !== latestRequest) return; // pair changed or Convert clicked again meanwhile
 
             if (history.length < 8) {
                 statusEl.innerText = "Not enough historical data for this pair to draw a trend.";
@@ -261,12 +267,21 @@ function initForecast() {
 
             detailsEl.style.display = "block";
         } catch (err) {
+            if (requestId !== latestRequest) return;
             console.error("Forecast failed:", err);
             statusEl.innerText = "Couldn't load historical rates. Check your connection and try again.";
-        } finally {
-            btn.disabled = false;
         }
-    });
+    }
+
+    // Convert and Swap both run a conversion, so both refresh the forecast.
+    // (script.js registers its handlers first, so the selects already hold
+    // their final values by the time these run.)
+    convertEl.addEventListener("click", runForecast);
+    swapEl.addEventListener("click", runForecast);
+
+    // Changing a dropdown makes the old chart wrong - hide it until Convert is clicked
+    fromEl.addEventListener("change", hideForecast);
+    toEl.addEventListener("change", hideForecast);
 }
 
 initForecast();
